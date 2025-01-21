@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rancher
+  namespace: argocd
+spec:
+  destination:
+    namespace: cattle-system
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: 'https://github.com/rancher/rancher-helm.git'
+    path: charts/rancher
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: hostname
+          value: rancher.pc-tips.se
+        - name: ingress.tls.source
+          value: letsEncrypt
+        - name: letsEncrypt.email
+          value: benjamin.sanden@pc-tips.se
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
