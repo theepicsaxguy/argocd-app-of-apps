@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  namespace: nginx  # Ensure this matches the target namespace
+  namespace: webserver
+  labels:
+    app: nginx
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
@@ -14,7 +16,7 @@ spec:
         app: nginx
     spec:
       containers:
-        - name: nginx
-          image: nginx:latest
-          ports:
-            - containerPort: 80
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
