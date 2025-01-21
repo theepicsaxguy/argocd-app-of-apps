@@ -6,9 +6,26 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 6.6.0
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
     chart: external-dns
+    targetRevision: 1.15.0
+    helm:
+      values: |
+        provider:
+          name: rfc2136
+          rfc2136:
+            host: 10.25.150.1
+            port: 53
+            zone: "kube.local."
+            tsigKeyName: "externaldns-key"
+            tsigSecret: "your-tsig-secret"
+            tsigSecretAlg: "hmac-sha256"
+            tsigAxfr: true
+        sources:
+          - service
+          - ingress
+        interval: "1m"
+        logLevel: debug
   destination:
     server: https://kubernetes.default.svc
     namespace: external-dns
@@ -16,3 +33,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
