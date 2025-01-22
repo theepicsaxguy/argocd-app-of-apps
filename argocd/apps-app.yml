@@ -13,6 +13,8 @@ spec:
     targetRevision: HEAD
     directory:
       recurse: true
+      exclude: '{config.json,wireguard/*}'
+      include: '*.yaml, *.yml'
   project: default
   syncPolicy:
     automated:

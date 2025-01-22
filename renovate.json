@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "paths": [
+        "apps/networking/unifi/**",
+        "apps/argocd/base/services/mlops/localai.yaml",
+        "apps/argocd/kustomization.yaml",
+        "apps/argocd/base/core/argocd.yaml",
+        "apps/argocd/Dockerfile",
+        "apps/argocd/base/services/gitea.yaml",
+        "apps/data/redis/kustomization.yaml",
+        "apps/home/**"
+      ],
+      "enabled": false
+    }
+  ],
+  "argocd": {
+    "enabled": true,
+    "fileMatch": ["apps/argocd/.+\\.yaml$"]
+  },
+  "kustomize": {
+    "fileMatch": [
+      "(^|/)kustomization\\.ya?ml$"
+    ],
+    "enabled": true
+  },
+  "pinDigests":true
+}

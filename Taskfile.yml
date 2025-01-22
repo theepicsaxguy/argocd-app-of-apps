@@ -1,0 +1,122 @@
+version: '3'
+
+silent: true
+
+includes:
+  cli: ./tasks/cli.yaml
+  postgres: ./tasks/postgres.yaml
+  argocd: ./tasks/argocd.yaml
+  vault: ./tasks/vault.yaml
+  tf: ./tasks/terraform.yaml
+  secrets: ./tasks/secrets.yaml
+  cluster: ./tasks/cluster.yaml
+  test: ./tasks/test.yaml
+  talos: ./tasks/talos.yaml
+  commit: ./tasks/commit.yaml
+
+vars:
+  PATH_ERROR: is not installed or correctly configured in PATH.
+
+dotenv: ['.env']
+
+tasks:
+  clear:
+    cmds:
+      - sleep 0.1 && {{.CLEAR}}
+
+  explain:
+    desc: Explains a certain Task command more in-detail
+    cmds:
+      - task {{.CLI_ARGS}} --summary
+
+  lint:
+    desc: Performs lint testing on the YAML files in the repository using the yamllint tool to ensure proper formatting and syntax.
+    preconditions:
+      - sh: "which yamllint"
+        msg: "yamllint {{.PATH_ERROR}}"
+    cmds:
+      - yamllint -c ./.yamllint .
+
+  docs:gen:
+    preconditions:
+      - sh: 'which terraform-docs'
+        msg: 'terraform-docs {{.PATH_ERROR}}'
+    dir: terraform
+    desc: Build documentation using Terraform-docs
+    cmds:
+      - terraform-docs markdown -c .terraform-docs.yaml . --output-file README.md
+
+  local:
+    desc: local-path storage
+    preconditions:
+      - sh: "which kustomize"
+        msg: "kustomize {{.PATH_ERROR}}"
+    cmds:
+      - kustomize build "github.com/rancher/local-path-provisioner/deploy?ref=v0.0.22" | kubectl apply -f -
+
+  validate:
+    preconditions:
+      - sh: "which kubeconform"
+        msg: "kubeconform {{.PATH_ERROR}}"
+    desc: Validates your Yaml objects in the repository using Kubeconform
+    cmds:
+      - |
+        objectTypes=("svc" "deployment" "*secret" "cm" "pvc" "pv" "role" "sa" "cr" "rb");
+        for obj in "${objectTypes[@]}"; do
+          echo -e "\nValidating ${obj^} object files";
+          find . -maxdepth 20 -name ${obj}.yaml -exec kubeconform -summary -exit-on-error -ignore-missing-schemas -kubernetes-version "{{.K8S_VERSION}}" -schema-location default {} \;
+        done
+    silent: true
+
+  calc:
+    preconditions:
+      - sh: "which kuota-calc"
+        msg: "kuota-calc {{.PATH_ERROR}}"
+    cmds:
+      - find . -maxdepth 50 -name deployment.yaml -exec cat {} \; | kuota-calc --detailed
+      - find . -maxdepth 50 -name statefulset.yaml -exec cat {} \; | kuota-calc --detailed
+      - find . -maxdepth 50 -name daemonset.yaml -exec cat {} \; | kuota-calc --detailed
+
+  repos:
+    desc: Adds and updates all the required Helm repositories locally.
+    preconditions:
+      - sh: "which helm"
+        msg: "helm {{.PATH_ERROR}}"
+    cmds:
+      - task: cli:clear
+      - task: cli:highlight_bg
+      - echo -e "This will add new repositories to your local Helm\n"
+      - task: cli:reset
+      - helm repo add chaos-mesh https://charts.chaos-mesh.org
+      - helm repo add hashicorp https://helm.releases.hashicorp.com
+      - helm repo add bitnami https://charts.bitnami.com/bitnami
+      - helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/
+      - helm repo add nginx-stable https://helm.nginx.com/stable
+      - helm repo add lwolf-charts http://charts.lwolf.org
+      - helm repo add emberstack https://emberstack.github.io/helm-charts
+      - helm repo add keyporttech https://keyporttech.github.io/helm-charts/
+      - helm repo add agones https://agones.dev/chart/stable
+      - helm repo add drone https://charts.drone.io
+      - helm repo add botkube https://charts.botkube.io
+      - helm repo add mysql-operator https://mysql.github.io/mysql-operator/
+      - helm repo add stakater https://stakater.github.io/stakater-charts
+      - helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+      - helm repo add ananace-charts https://ananace.gitlab.io/charts
+      - helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+      - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      - helm repo add pixie-operator https://pixie-operator-charts.storage.googleapis.com
+      - helm repo add eraser https://azure.github.io/eraser/charts
+      - helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
+      - helm repo add mayastor https://openebs.github.io/mayastor-extensions/
+      - task: cli:clear
+      - echo -e "This will add new repositories to your local Helm\n"
+      - task: cli:highlight_normal
+      - echo -e "Finished adding repositories. Updating them now.\n"
+      - task: cli:reset
+      - helm repo update
+    ignore_error: true
+
+  run:
+    cmds:
+      - task: validate
+      - task: commit
