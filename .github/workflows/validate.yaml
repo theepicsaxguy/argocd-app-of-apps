@@ -7,33 +7,33 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Check if Services have changed
         id: changed-services
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/svc.yaml
             apps/**/*-svc.yaml
       - name: Check if Deployments/Statefulsets have changed
         id: changed-workloads
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/deployment.yaml
             apps/**/statefulset.yaml
       - name: Check if configMap/Secrets have changed
         id: changed-configs
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/cm.yaml
             apps/**/secret.yaml
       - name: Check if Permissions have changed
         id: changed-rbac
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/rb.yaml
@@ -42,7 +42,7 @@ jobs:
             apps/**/cr.yaml
       - name: Check if Storage resources have changed
         id: changed-storage
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/pvc.yaml
@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate new Services
         id: validate-service
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-services.outputs.any_changed == 'true'
         with:
           run: |
@@ -62,7 +62,7 @@ jobs:
 
       - name: Validate new Workloads
         id: validate-workloads
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-workloads.outputs.any_changed == 'true'
         with:
           run: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: Validate new configMaps or Secrets
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-configs.outputs.any_changed == 'true'
         with:
           run: |
@@ -80,7 +80,7 @@ jobs:
 
       - name: Validate new Permissions and RBAC resources
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-rbac.outputs.any_changed == 'true'
         with:
           run: |
@@ -91,7 +91,7 @@ jobs:
 
       - name: Validate new Storage resources
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-storage.outputs.any_changed == 'true'
         with:
           run: |
@@ -100,7 +100,7 @@ jobs:
             find . -maxdepth 15 -name clas.yaml -exec kubeconform --verbose -exit-on-error -ignore-missing-schemas -kubernetes-version "1.26.0" -schema-location default {} \;
 
       - name: Find Comment
-        uses: peter-evans/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3
+        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}

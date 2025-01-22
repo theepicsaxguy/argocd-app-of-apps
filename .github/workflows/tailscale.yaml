@@ -10,21 +10,21 @@ jobs:
   acl-sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Check if Tailscale file has changed
         id: tailscale-changes
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             policy.hujson
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Sync ACL with Tailscale
         if: github.event_name == 'push' && steps.tailscale-changes.outputs.any_changed == 'true'
         id: deploy-acl
-        uses: tailscale/gitops-acl-action@v1
+        uses: tailscale/gitops-acl-action@90d41601ba36b946cf4946ef5a72bf6e16bae14b # v1
         with:
           api-key: ${{ secrets.TS_API_KEY }}
           tailnet: ${{ secrets.TS_TAILNET }}
@@ -33,7 +33,7 @@ jobs:
       - name: Test newer ACL configs
         if: github.event_name == 'pull_request' && steps.tailscale-changes.outputs.any_changed == 'true'
         id: test-acl
-        uses: tailscale/gitops-acl-action@v1
+        uses: tailscale/gitops-acl-action@90d41601ba36b946cf4946ef5a72bf6e16bae14b # v1
         with:
           api-key: ${{ secrets.TS_API_KEY }}
           tailnet: ${{ secrets.TS_TAILNET }}
