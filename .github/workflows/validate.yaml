@@ -7,7 +7,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Check if Services have changed
@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate new Services
         id: validate-service
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-services.outputs.any_changed == 'true'
         with:
           run: |
@@ -62,7 +62,7 @@ jobs:
 
       - name: Validate new Workloads
         id: validate-workloads
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-workloads.outputs.any_changed == 'true'
         with:
           run: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: Validate new configMaps or Secrets
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-configs.outputs.any_changed == 'true'
         with:
           run: |
@@ -80,7 +80,7 @@ jobs:
 
       - name: Validate new Permissions and RBAC resources
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-rbac.outputs.any_changed == 'true'
         with:
           run: |
@@ -91,7 +91,7 @@ jobs:
 
       - name: Validate new Storage resources
         id: validate-configs
-        uses: mathiasvr/command-output@v1
+        uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-storage.outputs.any_changed == 'true'
         with:
           run: |
