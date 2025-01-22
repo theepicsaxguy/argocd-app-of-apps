@@ -12,28 +12,28 @@ jobs:
           fetch-depth: 0
       - name: Check if Services have changed
         id: changed-services
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/svc.yaml
             apps/**/*-svc.yaml
       - name: Check if Deployments/Statefulsets have changed
         id: changed-workloads
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/deployment.yaml
             apps/**/statefulset.yaml
       - name: Check if configMap/Secrets have changed
         id: changed-configs
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/cm.yaml
             apps/**/secret.yaml
       - name: Check if Permissions have changed
         id: changed-rbac
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/rb.yaml
@@ -42,7 +42,7 @@ jobs:
             apps/**/cr.yaml
       - name: Check if Storage resources have changed
         id: changed-storage
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 # v45
+        uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
         with:
           files: |
             apps/**/pvc.yaml
@@ -100,7 +100,7 @@ jobs:
             find . -maxdepth 15 -name clas.yaml -exec kubeconform --verbose -exit-on-error -ignore-missing-schemas -kubernetes-version "1.26.0" -schema-location default {} \;
 
       - name: Find Comment
-        uses: peter-evans/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3
+        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
