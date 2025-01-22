@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: all-apps
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: 'https://github.com/theepicsaxguy/argocd-app-of-apps.git'
+        revision: main
+        # Look for subfolders 2 levels deep:
+        directories:
+          - path: apps/*/* 
+            # This includes folders like apps/media/jellyfin, 
+            # apps/network/.wireguard, apps/system/external-dns, etc.
+  template:
+    metadata:
+      # We'll name the Argo CD Application based on the last subfolder (e.g. "jellyfin")
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/theepicsaxguy/argocd-app-of-apps.git'
+        targetRevision: main
+        # The actual path for each child app is the same folder we enumerated
+        path: '{{path}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        # We'll place each subfolder's resources in a namespace 
+        # derived from its parent folder name (e.g. "media", "system", etc.)
+        namespace: '{{path.dirname | basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
