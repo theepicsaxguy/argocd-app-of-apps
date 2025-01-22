@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: renovate
+  labels:
+    app: renovate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: renovate
+  template:
+    metadata:
+      labels:
+        app: renovate
+    spec:
+      containers:
+      - name: renovate
+        image: renovate/renovate:31.97.3
+        # Example args if needed:
+        args: ["--token=${RENOVATE_TOKEN}", "--log-level=info"]

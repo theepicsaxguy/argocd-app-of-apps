@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-secrets
+  labels:
+    app: external-secrets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-secrets
+  template:
+    metadata:
+      labels:
+        app: external-secrets
+    spec:
+      containers:
+      - name: manager
+        image: ghcr.io/external-secrets/external-secrets:v0.10.2
+        args: ["manager"]
+        ports:
+        - containerPort: 9119

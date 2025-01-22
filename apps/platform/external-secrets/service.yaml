@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-secrets-metrics
+  labels:
+    app: external-secrets
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 9119
+      protocol: TCP
+      targetPort: 9119
+  selector:
+    app: external-secrets
