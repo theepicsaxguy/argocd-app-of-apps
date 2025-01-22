@@ -1,22 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
-  namespace: webserver
+  name: jellyfin
   labels:
-    app: nginx
+    app: jellyfin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: jellyfin
   template:
     metadata:
       labels:
-        app: nginx
+        app: jellyfin
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
+      - name: jellyfin
+        image: jellyfin/jellyfin:10.8.9
         ports:
-        - containerPort: 80
+        - containerPort: 8096
