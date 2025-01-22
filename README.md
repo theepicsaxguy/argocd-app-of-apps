@@ -1,61 +1,54 @@
-# Single-Repo ArgoCD with ApplicationSets
 
-## Overview
-This repository organizes Kubernetes manifests using three levels:
+# Kubernetes Homelab: Single-Repo ArgoCD with ApplicationSets
 
-1. **Level 1: `apps/`**  
-   - Each subfolder has pure `.yaml` manifests. No Helm or Kustomize.  
-   - Example folders: `apps/media/jellyfin`, `apps/network/.wireguard`, etc.  
+## 🌌 **About This Repo**
 
-2. **Level 2: `appsets/`**  
-   - Contains an `ApplicationSet` definition (`all-apps.yaml`) that scans `apps/*/*` and generates an Argo CD `Application` for each subfolder.  
-   - The resulting Argo CD apps deploy each set of manifests automatically.
+Welcome to my Kubernetes lab. This repository is the backbone of my homelab automation. It simplifies managing a bunch of Kubernetes apps using ArgoCD and ApplicationSets. No fluff, no overengineering—just a clean, organized approach to GitOps for my homelab adventures.
 
-3. **Level 3: `argocd/`**  
-   - Contains an optional “app-of-apps.yaml” that references the `appsets/` folder.  
-   - Apply `app-of-apps.yaml` in Argo CD to bootstrap the entire repository in one go.
+I built this to centralize everything: from media apps to network tools and system utilities. It’s all here, deployed automatically with a single source of truth.
 
-## Usage
+---
 
-1. **Install Argo CD** on your cluster.  
-2. **Add a top-level Argo CD Application** that points to `argocd/app-of-apps.yaml`:
-    ```yaml
-    apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: bootstrap
-      namespace: argocd
-    spec:
-      source:
-        repoURL: 'https://github.com/theepicsaxguy/argocd-app-of-apps.git'
-        targetRevision: main
-        path: argocd
-        directory:
-          recurse: true
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: argocd
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-    ```
-3. **Add new apps** by creating a subfolder under the relevant category (e.g., `apps/system/my-new-app`). Place `.yaml` manifests there. The ApplicationSet automatically detects it on the next sync.
-4. **Optional**: If you don’t want the “app-of-apps” approach, directly apply `appsets/all-apps.yaml` to Argo CD. Then Argo CD will manage everything from that single `ApplicationSet`.
+## 🛠️ **How It Works**
 
-## Example Folder Layout
+This setup has **three layers** to keep things structured:
 
-apps/ media/ jellyfin/ deployment.yaml service.yaml network/ .wireguard/ deployment.yaml service.yaml ... appsets/ all-apps.yaml argocd/ app-of-apps.yaml namespaces/ ...
+### **1️⃣ `apps/` - App Manifests**  
+The foundation.  
+- Each subfolder contains pure `.yaml` Kubernetes manifests—no Helm, no Kustomize, just YAML.  
+- Categories help keep things tidy:  
+  - `apps/media/` for media servers like Jellyfin.  
+  - `apps/network/` for tools like Wireguard.  
+  - `apps/system/` for utilities like cert-manager.  
 
-sql
-Kopiera
+---
 
-## Why ApplicationSets?
-- **Automatic Discovery**: No need to edit aggregator files when new apps/folders are added.  
-- **Scalability**: If you add more clusters or environment overlays, you can expand the generator logic without rewriting everything.
+### **2️⃣ `appsets/` - ApplicationSets**  
+The automation magic happens here.  
+- A single `ApplicationSet` (`all-apps.yaml`) scans the `apps/` directory.  
+- For every subfolder, an ArgoCD `Application` is created automatically.  
+- Just drop a new app folder under `apps/`, and ArgoCD picks it up during the next sync.  
 
-Enjoy simpler GitOps with Argo CD + ApplicationSets!
+---
 
+### **3️⃣ `argocd/` - Bootstrap**  
+The “all-in-one” option.  
+- A single `app-of-apps.yaml` file references the `appsets/`.  
+- Applying this to ArgoCD bootstraps **everything** at once—apps, system tools, and more.  
+
+---
+
+## 🎯 **Why I Built This**
+
+- **For My Homelab**: Managing Kubernetes apps manually was a pain. I needed a smarter, automated approach that could scale as my setup grew.  
+- **GitOps-First**: Everything is version-controlled, so I know exactly what’s running and where.  
+- **Flexibility**: New app? Just drop it into `apps/`. Want to scale? Add clusters or overlays without rewriting configs.  
+
+---
+
+## 📁 **Folder Structure**
+
+```
 .
 ├── apps/
 │   ├── media/
@@ -68,26 +61,39 @@ Enjoy simpler GitOps with Argo CD + ApplicationSets!
 │   │   │   ├── deployment.yaml
 │   │   │   └── service.yaml
 │   │   └── ...
-│   ├── platform/
-│   │   ├── external-secrets/
-│   │   ├── grafana/
-│   │   ├── renovate/
-│   │   └── ...
 │   ├── system/
 │   │   ├── cert-manager/
-│   │   ├── cloudflared/
 │   │   ├── external-dns/
-│   │   ├── scheduler/
 │   │   └── ...
-│   ├── webserver/
-│   │   └── nginx/
-│   │       ├── deployment.yaml
-│   │       └── service.yaml
-│   └── databases/
-│       └── ...
 ├── appsets/
-│   └── all-apps.yaml              <-- New ApplicationSet definition
+│   └── all-apps.yaml              <-- ApplicationSet definition
 ├── argocd/
-│   └── app-of-apps.yaml           <-- Optional “umbrella” application
-├── namespaces/                    <-- (If you keep these around)
+│   └── app-of-apps.yaml           <-- Optional bootstrap app
 └── ...
+```
+
+---
+
+## 🚀 **Getting Started**
+
+1. **Install ArgoCD** on your Kubernetes cluster.  
+2. **Apply `argocd/app-of-apps.yaml`** in ArgoCD to bootstrap everything:  
+   - ArgoCD syncs with this repo.  
+   - All apps in `apps/` are automatically deployed.  
+3. **Add Apps** by creating a new subfolder under `apps/`.  
+4. **Sync and Enjoy**: ArgoCD will pick up the changes, and the new app will be deployed automatically.
+
+---
+
+## 🌀 **Why ApplicationSets?**
+- **Automatic Discovery**: Drop a folder, and it’s live—no manual edits.  
+- **Scalable**: Add clusters or environments with minimal tweaks.  
+- **GitOps Nirvana**: Everything is clean, versioned, and easy to manage.  
+
+---
+
+## 🤘 **Final Thoughts**
+
+This setup keeps my homelab running smoothly without babysitting YAML files. It’s not just practical—it’s satisfying to see everything deploy itself with zero hassle. If you’re into Kubernetes labs, this approach might inspire you to level up your own.
+
+Happy hacking!
