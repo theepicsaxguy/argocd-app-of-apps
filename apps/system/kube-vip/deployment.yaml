@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-vip
+  namespace: kube-system
+  labels:
+    app: kube-vip
+spec:
+  selector:
+    matchLabels:
+      app: kube-vip
+  template:
+    metadata:
+      labels:
+        app: kube-vip
+    spec:
+      hostNetwork: true
+      containers:
+      - name: kube-vip
+        image: plndr/kube-vip:latest
+        args:
+        - start
+        - --address=10.25.150.10
+        env:
+        - name: vip_arp
+          value: "true"
+        - name: vip_leaderElection
+          value: "true"
+        - name: vip_interface
+          value: "eth0" # Replace with the network interface name
+        - name: vip_address
+          value: "10.25.150.10"
+        - name: vip_leaderElectionNamespace
+          value: "kube-system"
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      nodeSelector:
+        kubernetes.io/os: linux
