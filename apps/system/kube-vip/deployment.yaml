@@ -1,51 +1,78 @@
-# apiVersion: apps/v1
-# kind: DaemonSet
-# metadata:
-#   name: kube-vip
-#   namespace: kube-system
-#   labels:
-#     app: kube-vip
-# spec:
-#   selector:
-#     matchLabels:
-#       app: kube-vip
-#   template:
-#     metadata:
-#       labels:
-#         app: kube-vip
-#     spec:
-#       hostNetwork: true
-#       containers:
-#       - name: kube-vip
-#         image: plndr/kube-vip:latest
-#         args:
-#         - start
-#         - --address=10.25.150.10
-#         env:
-#         - name: vip_arp
-#           value: "true"
-#         - name: vip_leaderElection
-#           value: "true"
-#         - name: vip_interface
-#           value: "eth0" # Replace with the network interface name
-#         - name: vip_address
-#           value: "10.25.150.10"
-#         - name: vip_leaderElectionNamespace
-#           value: "kube-system"
-#         securityContext:
-#           capabilities:
-#             add:
-#             - NET_ADMIN
-#             - NET_RAW
-#         resources:
-#           requests:
-#             cpu: 50m
-#             memory: 64Mi
-#           limits:
-#             cpu: 250m
-#             memory: 128Mi
-#       tolerations:
-#       - effect: NoSchedule
-#         operator: Exists
-#       nodeSelector:
-#         kubernetes.io/os: linux
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-vip-ds
+  namespace: kube-system
+  labels:
+    app: kube-vip
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: kube-vip-ds
+  template:
+    metadata:
+      labels:
+        name: kube-vip-ds
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+      containers:
+      - args:
+        - manager
+        env:
+        - name: vip_arp
+          value: "true"
+        - name: bgp_enable
+          value: "false"
+        - name: port
+          value: "6443"
+        - name: vip_cidr
+          value: "32"
+        - name: cp_enable
+          value: "true"
+        - name: cp_namespace
+          value: kube-system
+        - name: vip_ddns
+          value: "false"
+        - name: svc_enable
+          value: "false"
+        - name: vip_leaderelection
+          value: "true"
+        - name: vip_leaseduration
+          value: "15"
+        - name: vip_renewdeadline
+          value: "10"
+        - name: vip_retryperiod
+          value: "2"
+        - name: address
+          value: 10.25.150.10
+        image: ghcr.io/kube-vip/kube-vip:v0.8.2
+        imagePullPolicy: Always
+        name: kube-vip
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+            - SYS_TIME
+      hostNetwork: true
+      restartPolicy: Always
+      serviceAccountName: kube-vip
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
