@@ -1,10 +1,10 @@
-apiVersion: k0sctl.k0sproject.io/v1beta1
+apiVersion: k3sctl.k3sproject.io/v1beta1
 kind: Cluster
 metadata:
   name: tardis
 spec:
-  k0s:
-    version: v1.31.5+k0s.0
+  k3s:
+    version: v1.31.5+k3s.0
     config:
       spec:
         api:
