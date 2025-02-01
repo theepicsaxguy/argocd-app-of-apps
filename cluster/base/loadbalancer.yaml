@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Deploy Metallb using its Helm chart so that the controller and speaker are managed.
+helmCharts:
+  - name: metallb
+    repo: https://metallb.github.io/metallb
+    version: v0.13.10
+    releaseName: metallb
+    valuesFile: metallb-values.yaml
+    namespace: metallb-system
