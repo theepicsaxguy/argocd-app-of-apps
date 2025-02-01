@@ -123,10 +123,10 @@ talos/clusterconfig
 
 
 
-# migration to kustomize.
-apps
-apps/**
-argocd
-argocd/**
-appsets
-appsets/**
+# # migration to kustomize.
+# apps
+# apps/**
+# argocd
+# argocd/**
+# appsets
+# appsets/**
