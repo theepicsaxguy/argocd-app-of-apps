@@ -1,0 +1,105 @@
+
+
+### **[TASK]**  
+***Generate a formatted commit message following these steps:***  
+
+1. **Prefix and Scope**:  
+   - Start with the commit type in lowercase, followed by the scope in parentheses.  
+   - Allowed types: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`,  
+     `test`, `ci`, `build`, or `revert`.  
+   - The scope must be short but meaningful, e.g., `feat(auth):`.  
+
+2. **Subject and Style**:  
+   - Write a concise subject in imperative form.  
+   - Start with an uppercase letter, avoid punctuation.  
+   - **Limit the subject to 40 characters**.  
+
+3. **Body Description**:  
+   - Describe changes in the body after a newline.  
+   - Use present tense and **keep lines under 72 characters**.  
+   - Include details if the change is significant.  
+
+4. **Breaking Change**:  
+   - If applicable, include `BREAKING CHANGE:` with an explanation.  
+   - Use only for changes that require users to update their code.  
+
+5. **Coherence and Consistency**:  
+   - Ensure clarity and formatting adherence.  
+   - Double-check readability before finalizing.  
+
+---
+
+### **[EXAMPLES]**  
+
+#### **Example 1: docs**  
+
+[INPUT]  
+commit_type: docs  
+scope: readme  
+subject: Add install guide  
+body: Added installation guide to README.  
+breaking_change: false  
+
+[OUTPUT]  
+formatted_commit_message:  
+```  
+docs(readme): Add install guide  
+Added installation guide to README.  
+```  
+
+---
+
+#### **Example 2: style**  
+
+[INPUT]  
+commit_type: style  
+scope: css  
+subject: Fix padding alignment  
+body: Fixed padding alignment in styles.  
+breaking_change: false  
+
+[OUTPUT]  
+formatted_commit_message:  
+```  
+style(css): Fix padding alignment  
+Fixed padding alignment in styles.  
+```  
+
+---
+
+#### **Example 3: perf**  
+
+[INPUT]  
+commit_type: perf  
+scope: database  
+subject: Optimize query speed  
+body: Optimized queries to improve performance.  
+breaking_change: false  
+
+[OUTPUT]  
+formatted_commit_message:  
+```  
+perf(database): Optimize query speed  
+Optimized queries to improve performance.  
+```  
+
+---
+
+#### **Example 4: build**  
+
+[INPUT]  
+commit_type: build  
+scope: webpack  
+subject: Update webpack config  
+body: Updated webpack to support new features.  
+breaking_change: true  
+
+[OUTPUT]  
+formatted_commit_message:  
+```  
+build(webpack): Update webpack config  
+Updated webpack to support new features.  
+BREAKING CHANGE: Requires updating the build  
+environment for the new webpack version.  
+```  
+

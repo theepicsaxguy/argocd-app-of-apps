@@ -1,43 +1,159 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
+    "mergeConfidence:all-badges",
     "config:recommended"
   ],
+  "timezone": "Europe/Berlin",
+  "automergeSchedule": [
+    "after 3am",
+    "before 6am"
+  ],
+  "rebaseWhen": "conflicted",
+  "prHourlyLimit": 0,
+  "helm-values": {
+    "fileMatch": [
+      "(^|/|\\w+\\.)values\\.ya?ml$"
+    ],
+    "pinDigests": true
+  },
   "packageRules": [
     {
+      "matchManagers": [
+        "github-actions"
+      ],
       "matchUpdateTypes": [
-        "minor",
-        "patch",
+        "digest",
         "pin",
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "pinDigests": true
+    },
+    {
+      "matchDatasources": [
+        "docker",
+        "helm"
+      ],
+      "matchUpdateTypes": [
         "digest"
+      ],
+      "schedule": [
+        "on monday"
       ],
       "automerge": true
     },
     {
-      "matchFileNames": [
-        "apps/networking/unifi/**",
-        "apps/argocd/base/services/mlops/localai.yaml",
-        "apps/argocd/kustomization.yaml",
-        "apps/argocd/base/core/argocd.yaml",
-        "apps/argocd/Dockerfile",
-        "apps/argocd/base/services/gitea.yaml",
-        "apps/data/redis/kustomization.yaml",
-        "apps/home/**"
+      "matchDatasources": [
+        "docker",
+        "helm"
       ],
-      "enabled": false
+      "matchUpdateTypes": [
+        "pinDigest",
+        "pin",
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": [
+        "Kustomization"
+      ],
+      "matchUpdateTypes": [
+        "pinDigest",
+        "pin",
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchDatasources": [
+        "docker",
+        "helm"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "assignees": [
+        "theepicsaxguy"
+      ]
+    },
+    {
+      "matchDepTypes": [
+        "Kustomization"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "assignees": [
+        "theepicsaxguy"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/theepicsaxguy/devops-toolbox"
+      ],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/home-assistant/home-assistant"
+      ],
+      "matchNewValue": "/^.+\\.0$/",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": [
+        "plexinc/pms-docker"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)\\-(?<revision>\\w+)$"
+    },
+    {
+      "matchPackageNames": [
+        "fireflyiii/core"
+      ],
+      "versioning": "regex:^version\\-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "k0sproject/k0s"
+      ],
+      "assignees": [
+        "theepicsaxguy"
+      ],
+      "versioning": "loose"
+    },
+    {
+      "versioning": "regex:^release\\-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$",
+      "matchPackageNames": [
+        "ghcr.io/hotio{/,}**"
+      ]
+    },
+    {
+      "description": "Wait for stable release. Updating this instantly will cause issues since amd64 builds always take a tiny bit more",
+      "matchPackageNames": [
+        "redis",
+        "mariadb",
+        "postgres",
+        "csi-driver-nfs"
+      ],
+      "minimumReleaseAge": "4 hours"
     }
   ],
-  "argocd": {
-    "enabled": true,
-    "fileMatch": [
-      "apps/argocd/.+\\.yaml$"
-    ]
-  },
-  "kustomize": {
-    "fileMatch": [
-      "(^|/)kustomization\\.ya?ml$"
-    ],
-    "enabled": true
-  },
-  "pinDigests": true
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^k0sctl.yaml$"
+      ],
+      "matchStrings": [
+        "\\s+version\\:(!?\\s)(?<currentValue>.*)\\n"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "k0sproject/k0s"
+    }
+  ]
 }

@@ -1,0 +1,68 @@
+{
+  "types": [
+    {
+      "type": "feat",
+      "section": "✨ Features",
+      "hidden": false
+    },
+    {
+      "type": "fix",
+      "section": "🐛 Bug Fixes",
+      "hidden": false
+    },
+    {
+      "type": "chore",
+      "section": "📦 Maintenance",
+      "hidden": false
+    },
+    {
+      "type": "docs",
+      "section": "📝 Documentation",
+      "hidden": false
+    },
+    {
+      "type": "style",
+      "section": "💄 Styling",
+      "hidden": false
+    },
+    {
+      "type": "refactor",
+      "section": "🔨 Refactoring",
+      "hidden": false
+    },
+    {
+      "type": "perf",
+      "section": "⚡ Performance",
+      "hidden": false
+    },
+    {
+      "type": "test",
+      "section": "✅ Testing",
+      "hidden": false
+    },
+    {
+      "type": "ci",
+      "section": "🔧 CI/CD",
+      "hidden": false
+    },
+    {
+      "type": "build",
+      "section": "🏗️ Build",
+      "hidden": false
+    },
+    {
+      "type": "revert",
+      "section": "⏪ Reverts",
+      "hidden": false
+    }
+  ],
+  "commitUrlFormat": "https://github.com/theepicsaxguy/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/theepicsaxguy/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://github.com/theepicsaxguy/issues/{{id}}",
+  "issuePrefixes": [
+    "#"
+  ],
+  "skip": {
+    "tag": false
+  }
+}

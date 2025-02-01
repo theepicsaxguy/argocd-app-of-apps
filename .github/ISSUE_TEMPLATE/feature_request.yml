@@ -1,0 +1,52 @@
+name: Feature Request
+description: Suggest an idea for this project.
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Important
+        Before requesting a feature, check the [Wiki](https://theepicsaxguy.com/k3s-cluster) and [GitHub Discussions](https://github.com/theepicsaxguy/k3s-cluster/discussions).
+
+  - type: checkboxes
+    attributes:
+      label: Existing Issues Check
+      options:
+        - label: I have searched for similar feature requests.
+          required: true
+
+  - type: textarea
+    id: related-problem
+    attributes:
+      label: Related Problem
+      description: Is your feature request related to an existing problem?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution-implementation
+    attributes:
+      label: Suggested Solution
+      description: Describe the solution you'd like.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered other solutions?
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Additional Context
+      description: Links, references, or anything else helpful.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct Agreement
+      options:
+        - label: I agree to follow the project's Code of Conduct
+          required: true

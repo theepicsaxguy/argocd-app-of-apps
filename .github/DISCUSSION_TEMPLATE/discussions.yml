@@ -1,0 +1,47 @@
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Important
+        Before opening a discussion, check the [Wiki](https://theepicsaxguy.com/k3s-cluster) and [GitHub Discussions](https://github.com/theepicsaxguy/k3s-cluster/discussions) for previous answers.
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Discussion Topic
+      options:
+        - Configuration
+        - New Idea or Feature
+        - Possible Bug
+        - Other
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Clearly describe your question or issue.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs (Optional)
+      description: |
+        Copy and paste any relevant log output here.
+        **No need to add backticks, logs will be formatted automatically.**
+      render: shell
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything Else?
+      description: |
+        Any links, references, or context to help understand the discussion better.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this discussion, you agree to follow the [Code of Conduct](https://github.com/theepicsaxguy/k3s-cluster/blob/main/.github/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow the Code of Conduct
+          required: true
