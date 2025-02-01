@@ -1,0 +1,15 @@
+titleOnly: true
+# Uses Conventional Commits: https://www.conventionalcommits.org/en/v1.0.0/
+types:
+  - build # Changes to build system or dependencies
+  - chore # Misc. maintenance updates
+  - ci # Changes to CI/CD
+  - docs # Documentation updates
+  - feat # New feature
+  - fix # Bug fix
+  - perf # Performance optimization
+  - refactor # Code restructuring without feature change
+  - revert # Reverting previous commits
+  - style # Formatting changes, no logic updates
+  - test # Adding or updating tests
+  - breaking # Major breaking changes requiring migration

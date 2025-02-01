@@ -1,0 +1,20 @@
+# .github/workflows/yaml-validate.yml
+name: YAML Syntax Check
+
+on:
+  pull_request:
+    branches: ["main", "stable", "release/v*"]
+
+jobs:
+  validate:
+    name: Validate YAML Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install YAML Linter
+        run: pip install yamllint
+
+      - name: Run YAML Linting
+        run: yamllint -c .yamllint.yml .

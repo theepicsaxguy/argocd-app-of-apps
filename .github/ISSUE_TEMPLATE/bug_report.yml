@@ -1,0 +1,40 @@
+name: Bug Report
+description: Report an issue you've encountered.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Important
+        Before reporting a bug, check the [Wiki](https://github.com/theepicsaxguy/k3s-cluster) and [GitHub Discussions](https://github.com/theepicsaxguy/k3s-cluster/discussions).
+
+  - type: checkboxes
+    attributes:
+      label: Existing Issues Check
+      options:
+        - label: I have searched for similar bug reports.
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What Happened?
+      description: Clearly describe the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: kernel-version
+    attributes:
+      label: Kernel Version (`uname -a`)
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: k8s-version
+    attributes:
+      label: Kubernetes Version (`kubectl version`)
+      render: shell
+    validations:
+      required: true
