@@ -39,8 +39,8 @@ Add `DefaultLimitNOFILE=1048576` in `/etc/systemd/system.conf` and `/etc/systemd
 ### Install the cluster
 
 ```bash
-k0sctl apply
-k0sctl kubeconfig > ~/.kube/config
+k3sctl apply
+k3sctl kubeconfig > ~/.kube/config
 ```
 
 ### Restore Sealed Secret key

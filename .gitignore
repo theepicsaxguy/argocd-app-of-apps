@@ -106,7 +106,7 @@ aggregated_output.json
 !apps/argocd/base/utilities/sealed.yaml
 docs/site/node_modules/**/*
 charts
-k0s_backup_*.tar.gz
+k3s_backup_*.tar.gz
 *.log
 secrets.txt
 
@@ -122,11 +122,4 @@ talosconfig
 talos/clusterconfig
 
 
-
-# # migration to kustomize.
-# apps
-# apps/**
-# argocd
-# argocd/**
-# appsets
-# appsets/**
+prompt.md

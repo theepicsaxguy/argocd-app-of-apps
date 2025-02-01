@@ -12,6 +12,6 @@ spec:
   customizeComponents:
     flags:
       handler:
-        kubelet-root: /var/lib/k0s/kubelet
+        kubelet-root: /var/lib/k3s/kubelet
   imagePullPolicy: IfNotPresent
   workloadUpdateStrategy: {}

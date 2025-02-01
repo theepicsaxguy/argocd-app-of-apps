@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+for cmd in kubectl kubeseal jq xclip; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "Error: $cmd is not installed or not in PATH."
+    exit 1
+  fi
+done
 
 if [ -f "$1" ]; then
   password=$(cat "$1")

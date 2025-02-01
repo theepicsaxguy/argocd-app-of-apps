@@ -119,7 +119,7 @@
     },
     {
       "matchPackageNames": [
-        "k0sproject/k0s"
+        "k3sproject/k3s"
       ],
       "assignees": [
         "theepicsaxguy"
@@ -147,13 +147,13 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "^k0sctl.yaml$"
+        "^k3sctl.yaml$"
       ],
       "matchStrings": [
         "\\s+version\\:(!?\\s)(?<currentValue>.*)\\n"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "k0sproject/k0s"
+      "depNameTemplate": "k3sproject/k3s"
     }
   ]
 }
