@@ -1,0 +1,7 @@
+# This file defines the configuration for Metallb.
+configInline:
+  address-pools:
+    - name: vip-pool
+      protocol: layer2
+      addresses:
+        - 10.25.150.10-10.25.150.10
