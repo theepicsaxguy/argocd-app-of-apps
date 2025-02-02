@@ -1,0 +1,15 @@
+# talos-configs/worker.yaml
+# Talos machine configuration for worker nodes
+version: v1alpha1
+
+machine:
+  token: "s3cr3t-t0k3n" # Must match the control plane token
+  install:
+    disk: /dev/sda
+  network:
+    interfaces:
+      - name: eth0
+        dhcp: true
+
+kubernetes:
+  version: "v1.27.3"
