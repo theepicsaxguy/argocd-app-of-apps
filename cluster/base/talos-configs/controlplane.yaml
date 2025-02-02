@@ -1,0 +1,22 @@
+# talos-configs/controlplane.yaml
+# Talos machine configuration for control plane nodes
+version: v1alpha1
+
+machine:
+  # A shared secure token (consider parameterizing or using secrets management)
+  token: "s3cr3t-t0k3n"
+  install:
+    disk: /dev/sda # Adjust to your hardware
+  network:
+    interfaces:
+      - name: eth0
+        dhcp: true
+
+kubernetes:
+  version: "v1.27.3"
+  controlPlane:
+    # The API endpoint now points to the external HA VIP provided by your load balancer.
+    endpoint: "10.0.0.100:6443"
+  extraManifests:
+    # Pin this URL to a commit or tag for immutability.
+    - "https://raw.githubusercontent.com/my-github-org/argocd-app-of-apps/<commit-hash>/bootstrap/argocd-install.yaml"
