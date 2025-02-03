@@ -21,7 +21,7 @@ spec:
   project: default
   source:
     path: projects
-    repoURL: https://github.com/theepicsaxguy/argocd-app-of-apps.git
+    repoURL: https://github.com/theepicsaxguy/argotest.git
   syncPolicy:
     automated:
       allowEmpty: true

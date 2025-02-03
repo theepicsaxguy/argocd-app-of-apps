@@ -1,0 +1,11 @@
+{
+  "appName": "cilium",
+  "userGivenName": "cilium",
+  "destNamespace": "default",
+  "destServer": "https://kubernetes.default.svc",
+  "srcPath": "apps/cilium/overlays/networking",
+  "srcRepoURL": "https://github.com/theepicsaxguy/argotest.git",
+  "srcTargetRevision": "",
+  "labels": null,
+  "annotations": null
+}
