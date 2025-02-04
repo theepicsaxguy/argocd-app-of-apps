@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-plugins
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theepicsaxguy/argocd-app-of-apps
+    targetRevision: HEAD
+    path: apps/argocd/plugins
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
