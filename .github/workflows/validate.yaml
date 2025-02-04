@@ -3,13 +3,16 @@ name: Validate Kubernetes Resources
 on:
   pull_request:
     branches: ["main"]
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+
       - name: Check if Services have changed
         id: changed-services
         uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
@@ -17,6 +20,7 @@ jobs:
           files: |
             apps/**/svc.yaml
             apps/**/*-svc.yaml
+
       - name: Check if Deployments/Statefulsets have changed
         id: changed-workloads
         uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
@@ -24,6 +28,7 @@ jobs:
           files: |
             apps/**/deployment.yaml
             apps/**/statefulset.yaml
+
       - name: Check if configMap/Secrets have changed
         id: changed-configs
         uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
@@ -31,6 +36,7 @@ jobs:
           files: |
             apps/**/cm.yaml
             apps/**/secret.yaml
+
       - name: Check if Permissions have changed
         id: changed-rbac
         uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
@@ -40,6 +46,7 @@ jobs:
             apps/**/crb.yaml
             apps/**/role.yaml
             apps/**/cr.yaml
+
       - name: Check if Storage resources have changed
         id: changed-storage
         uses: tj-actions/changed-files@d6e91a2266cdb9d62096cebf1e8546899c6aa18f # v45
@@ -48,9 +55,10 @@ jobs:
             apps/**/pvc.yaml
             apps/**/class.yaml
             apps/**/pv.yaml
+
       - name: Install Kubeconform
         run: |
-            (wget -qO- https://github.com/yannh/kubeconform/releases/download/v0.5.0/kubeconform-linux-amd64.tar.gz | sudo tar xvz -C /usr/bin) && sudo chmod +x /usr/bin/kubeconform
+          (wget -qO- https://github.com/yannh/kubeconform/releases/download/v0.5.0/kubeconform-linux-amd64.tar.gz | sudo tar xvz -C /usr/bin) && sudo chmod +x /usr/bin/kubeconform
 
       - name: Validate new Services
         id: validate-service
@@ -70,7 +78,7 @@ jobs:
             find . -maxdepth 15 -name statefulset.yaml -exec kubeconform --verbose -exit-on-error -ignore-missing-schemas -kubernetes-version "1.26.0" -schema-location default {} \;
 
       - name: Validate new configMaps or Secrets
-        id: validate-configs
+        id: validate-configs-cm-secrets
         uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-configs.outputs.any_changed == 'true'
         with:
@@ -79,7 +87,7 @@ jobs:
             find . -maxdepth 15 -name secret.yaml -exec kubeconform --verbose -exit-on-error -ignore-missing-schemas -kubernetes-version "1.26.0" -schema-location default {} \;
 
       - name: Validate new Permissions and RBAC resources
-        id: validate-configs
+        id: validate-rbac
         uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-rbac.outputs.any_changed == 'true'
         with:
@@ -90,7 +98,7 @@ jobs:
             find . -maxdepth 15 -name cr.yaml -exec kubeconform --verbose -exit-on-error -ignore-missing-schemas -kubernetes-version "1.26.0" -schema-location default {} \;
 
       - name: Validate new Storage resources
-        id: validate-configs
+        id: validate-storage
         uses: mathiasvr/command-output@8dbf451add3db114df0114aa5e21a1efef8c5015 # v1
         if: steps.changed-storage.outputs.any_changed == 'true'
         with:
@@ -104,11 +112,9 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body: |
-            ## List of Kubernetes resources schema validation
+          comment-author: "github-actions[bot]"
 
-      - name: Update comment with Service resouces
+      - name: Update comment with Service resources
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         if: steps.changed-services.outputs.any_changed == 'true'
         with:
@@ -124,7 +130,7 @@ jobs:
             </details>
           edit-mode: append
 
-      - name: Update comment with workload resouces
+      - name: Update comment with workload resources
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         if: steps.changed-workloads.outputs.any_changed == 'true'
         with:
@@ -140,7 +146,7 @@ jobs:
             </details>
           edit-mode: append
 
-      - name: Update comment with config resouces
+      - name: Update comment with config resources
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         if: steps.changed-configs.outputs.any_changed == 'true'
         with:
@@ -151,12 +157,12 @@ jobs:
 
             <summary><b>Kubernetes `configMap` and `Secret` resources</b></summary>
 
-            > ${{ steps.validate-configs.outputs.stdout }}
+            > ${{ steps.validate-configs-cm-secrets.outputs.stdout }}
 
             </details>
           edit-mode: append
 
-      - name: Update comment with RBAC resouces
+      - name: Update comment with RBAC resources
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         if: steps.changed-rbac.outputs.any_changed == 'true'
         with:
@@ -165,14 +171,14 @@ jobs:
           body: |
             <details>
 
-            <summary><b>Kubernetes `RoleBinding`, `ClusteRoleBinding`, `Role` and `ClusterRole` resources</b></summary>
+            <summary><b>Kubernetes `RoleBinding`, `ClusterRoleBinding`, `Role`, and `ClusterRole` resources</b></summary>
 
             > ${{ steps.validate-rbac.outputs.stdout }}
 
             </details>
           edit-mode: append
 
-      - name: Update comment with Storage resouces
+      - name: Update comment with Storage resources
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         if: steps.changed-storage.outputs.any_changed == 'true'
         with:
